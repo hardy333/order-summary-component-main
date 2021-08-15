@@ -9,29 +9,50 @@
   <title>Frontend Mentor | Order summary card</title>
 
   <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
-  <style>
-    .attribution { font-size: 11px; text-align: center; }
-    .attribution a { color: hsl(228, 45%, 44%); }
-  </style>
+  <link rel="stylesheet" href="./styles/style.css">
+
+
 </head>
-<body>
+<body >
+    <div class="card ">
+      <div class="card__img-container ripple-element ">
+        <img class="card__img" src="./images/illustration-hero.svg" alt="ilustration of girl listening music">
+      </div>
 
-  Order Summary
+      <article class="card__content ripple-element">
+        <h2>Order Summary</h2>
+        <p>You can now listen to millions of songs, audiobooks, and podcasts on any 
+          device anywhere you like!
+        </p>
 
-  You can now listen to millions of songs, audiobooks, and podcasts on any 
-  device anywhere you like!
+        <div class="card__plan ripple-element" >
+          <img class="plan__icon" src="./images/icon-music.svg" alt="music icon">
+          <div class="plan__info">
+            <span class="plan__name">Annual Plan</span>
+            <span class="plan__price">$59.99/year</span>
+          </div>
+          <a class="plan__link" href="#">Change</a>
+        </div>
 
-  Annual Plan
-  $59.99/year
+        <button class="card__btn ripple-element">Proceed to Payment</button>
 
-  Change
-
-  Proceed to Payment
-  Cancel Order
+        <a class="card__link" href="#" >
+          <span class="card__link--left">Cancel</span>
+          <span class="card__link--right">Order</span>
+        </a>
+      </article>
+    </div>
+  
   
   <div class="attribution">
     Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
-    Coded by <a href="#">Your Name Here</a>.
+    Coded by <a href="#">Gela Samosnidze</a>.
   </div>
+
+
+
+  <!-- Javascript -->
+  <script src="./js/vanilla-tilt.babel.min.js"></script>
+  <script src="./js/index.js"></script>
 </body>
 </html>

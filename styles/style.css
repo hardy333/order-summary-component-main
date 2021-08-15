@@ -1,0 +1,382 @@
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@500;700;900&display=swap');
+
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+:root{
+    --Very-pale-blue: hsl(225, 100%, 98%);
+    --Pale-blue: hsl(225, 100%, 94%);
+    --Bright-blue: hsl(245, 75%, 52%);
+    --Dark-blue: hsl(223, 47%, 23%);
+
+    --Desaturated-blue: hsl(224, 23%, 55%);
+
+    --white: #fff;
+    --black: #222;
+
+}
+
+html{
+    font-size: 62.5%;
+}
+
+
+body{
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 4rem 2rem 2rem;
+    
+    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Red Hat Display', sans-serif;
+    font-size: 1.6rem;
+    /* Weights: 500, 700, 900 */
+    
+    background: url("../images/pattern-background-desktop.svg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-color: var(--Pale-blue);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+
+    transform-style: preserve-3d;
+
+}
+
+
+.attribution{
+    margin-top: 4rem;
+    text-align: center;
+}
+
+
+.card{
+    width: 40rem;
+    max-width: 100%;
+
+    margin: auto;
+    
+    text-align: center;
+    overflow: hidden;
+    
+    border-radius: 10px;
+
+    background-color: var(--white);
+
+    --card-animation-time: 0.4s;
+    --card-items-animation-delay: 0.5s;
+    animation: startingAnimation var(--card-animation-time) ease-in;
+    opacity: 1;
+    transform: translate(0px, 0px);
+    user-select: none;
+    -webkit-user-select: none;
+
+}
+
+
+@keyframes startingAnimation{
+    from{
+        opacity: 0;
+        transform: translate(0px, -400px);
+    }
+}
+
+.card__img-container{
+    overflow: hidden;
+}
+
+.card__img{
+    width: 100%;
+    display: block;
+    transition: 0.2s ease-out;
+    position: relative;
+    z-index: -2;
+}
+
+
+.card__img:hover{
+    /* transform:scale(1.1); */
+    
+}
+
+.ripple{
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    padding-bottom: 0%;
+    border-radius: 50%;
+    z-index: -1;
+    transform: translate(-50%, -50%);
+    animation: rippleEffect 0.4s linear;
+    
+    background-color: hsla(205, 75%, 52%, 50%);
+
+}
+
+@keyframes rippleEffect {
+    to{
+        width: 200%;
+        padding-bottom: 200%;
+        opacity: 0;
+    }
+    
+}
+
+
+.card__content{
+    padding: 3.5rem 2.5rem;
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
+
+}
+
+.card__content h2{
+    color: var(--dark-blue);
+    font-size: 2.4rem;
+}
+
+.card__content p{
+    margin: 2rem 0px 3rem;
+    color: var(--Desaturated-blue);
+    font-weight: 500;
+    font-size: 1.6rem;
+
+}
+
+.card__content h2,
+.card__content p{
+    animation: cardContentAnimation 0.3s ease-out;
+    animation-delay: var(--card-items-animation-delay);
+    animation-fill-mode: forwards;
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+@keyframes cardContentAnimation {
+    to{
+        opacity: 1;
+        transform: scale(1);
+
+    }
+}
+
+.card__plan{
+    padding: 2rem 2rem;
+
+    border-radius: 10px;
+
+    font-size: 1.6rem;
+
+    background-color: var(--Very-pale-blue);
+
+    display: flex;
+    align-items: center;
+
+    animation: cardPlanAnimation 0.4s ease-out;
+    animation-delay: var(--card-items-animation-delay);
+    animation-fill-mode: forwards;
+    opacity: 0;
+
+    transform: translate(-120%, 0%);
+
+    /* this properties is for ripple effect */
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
+}
+
+@keyframes cardPlanAnimation {
+    to{
+        opacity: 1;
+        transform: translate(0%, 0%);
+    }
+    
+}
+
+.plan__icon{
+    margin-right: 20px;
+
+    animation: cardIconAnimation 0.2s ease-out;
+    animation-delay: 1.4s;
+    animation-fill-mode: forwards;
+
+    transform: rotateZ(360deg);
+}
+
+@keyframes cardIconAnimation{
+    to{
+         transform: rotateZ(0deg);
+    }
+
+}
+
+.plan__info{
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+    
+}
+
+.plan__name{
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: var(--dark-blue);
+}
+
+.plan__price{
+    color: var(--Desaturated-blue);
+    font-weight: 500;
+    margin-top: 0.3rem;
+}
+
+.plan__link{
+    color: var(--Bright-blue);
+    font-size: 1.5rem;
+    font-weight: 700;
+    opacity: 0.9;
+    filter: brightness(80%);
+}
+
+.plan__link:hover{
+    opacity: 0.6;
+}
+
+.card__btn{
+    width: 100%;
+    margin: 4rem 0rem;
+    padding: 2rem 1rem;
+
+    border: none;
+    border-radius: 1rem;
+
+    box-shadow: 0px 2rem 2rem -1rem hsla(245, 75%, 52%, 40%);
+    
+    font-weight: 700;
+    font-size: 2rem;
+
+    background-color: var(--Bright-blue);
+    color: var(--white);
+    cursor: pointer;
+
+    transition: color 1.2s linear;
+    
+    animation: cardBtnAnimation 0.4s ease-out;
+    animation-delay: var(--card-items-animation-delay);
+    animation-fill-mode: forwards;
+    opacity: 0;
+    transform: translate(120%, 0%);
+
+    overflow: hidden;
+}
+
+
+@keyframes cardBtnAnimation {
+    to{
+        opacity: 1;
+        transform: translate(0%, 0%)  scale(1);
+    }
+    
+}
+
+
+
+.card__btn:hover{
+    opacity: 0.8 !important;
+}
+
+.card__link {
+    text-decoration: none;
+    color: var(--Desaturated-blue);
+    font-weight: 700;
+    font-size: 1.6rem;
+}
+
+.card__link:hover{
+    color: var(--Dark-blue);
+}
+
+
+
+.card__link--left,
+.card__link--right{
+    animation: cardLinkAnimation 0.3s ease-out;
+    animation-delay: 0.9s;
+    animation-fill-mode: forwards;
+    display: inline-block;
+    opacity: 0;
+}
+
+.card__link--left{
+    transform: translate(-200px, 0%);
+
+}
+
+.card__link--right{
+    transform: translate(200px, 0px);
+}
+
+@keyframes cardLinkAnimation {
+    to{
+        transform: translate(0%, 0%);
+        opacity: 1;
+    }
+}
+
+/* Media queries start */
+@media screen and (max-width: 600px){
+    body{
+        background: url("../images/pattern-background-mobile.svg");
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-color: var(--Pale-blue);
+
+
+    }
+}
+
+@media screen and (max-width: 400px){
+    body{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .card__content{
+        padding-left: 1rem;
+        padding-right: 1rem;
+
+    }
+    .card__plan{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .plan__icon{
+        margin-right: 1rem;
+    }
+ 
+}
+
+@media only screen and (max-width: 300px){
+    html{
+        font-size: 40%;
+    }
+}
+
+@media only screen and (max-width: 200px){
+    .card__plan{
+       flex-direction: column;
+       align-items: center;
+       justify-content: center;
+    }
+    .plan__info{
+        margin: 2rem 0rem;
+        justify-content: center;
+    }
+}
+/* Media queries end */
+
