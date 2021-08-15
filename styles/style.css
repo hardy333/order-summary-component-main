@@ -45,8 +45,6 @@ body{
     align-items: center;
     justify-content: flex-end;
 
-    transform-style: preserve-3d;
-
 }
 
 
@@ -274,6 +272,11 @@ body{
     transform: translate(120%, 0%);
 
     overflow: hidden;
+
+    transition: width 0.2s ease-out;
+}
+.card__btn:active{
+    width: 99%;
 }
 
 

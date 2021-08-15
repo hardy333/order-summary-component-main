@@ -1,6 +1,6 @@
 VanillaTilt.init(document.querySelectorAll(".card"), {
     reverse:                false,  // reverse the tilt direction
-    max:                    5,     // max tilt rotation (degrees)
+    max:                    10,     // max tilt rotation (degrees)
     startX:                 0,      // the starting tilt on the X axis, in degrees.
     startY:                 0,      // the starting tilt on the Y axis, in degrees.
     perspective:            1000,   // Transform perspective, the lower the more extreme the tilt gets.
@@ -38,9 +38,9 @@ const handleRippleAnimationEnd = (e) => {
 }
 
 const createRippleEffect = (e) => {
+    // Stoping event bubbling in case user clicked ripple element which is 
+    // a child of element which also is element with ripple effect. 
     e.stopPropagation();
-
-    console.log(e.target);
     
     // Element in which we will create ripple effect. 
     const element = e.currentTarget;
@@ -62,7 +62,6 @@ const createRippleEffect = (e) => {
     ripple.style.top = posY + "px";
     ripple.style.left = posX + "px";
     ripple.classList.add("ripple");
-
     
     ripple.addEventListener("animationend", handleRippleAnimationEnd);
 
@@ -74,8 +73,6 @@ const createRippleEffect = (e) => {
 rippleElements.forEach(element => {
     element.style.position = "relative";
     element.style.zIndex = "0";
-    // element.style.overflow = "hidden";
-    
     element.addEventListener("click", createRippleEffect);
 
 })
@@ -83,3 +80,111 @@ rippleElements.forEach(element => {
 /************************\
     Ripple Effect end
 \************************/
+
+const cardContent = document.querySelector(".card__content");
+
+const canvas = document.createElement("CANVAS");
+canvas.classList.add("canvas");
+
+cardContent.appendChild(canvas);
+
+const ctx = canvas.getContext("2d");
+
+const {clientWidth, clientHeight} = cardContent;
+
+
+const initCanvas = () => {
+    canvas.width = clientWidth;
+    canvas.height = clientHeight;
+}
+initCanvas();
+
+
+const NUMBER_OF_PARTICLES = 10;
+const PARTICLES_ARRAY = [];
+
+class Particle{
+    constructor(x, y, radius, speedX, speedY, color){
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.speedX = speedX;
+        this.speedY = speedY;
+        this.color = color;
+    }
+
+    draw(){
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    move(){
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+    }
+
+    checkCollision(){
+        if(this.x - this.radius <= 0 || this.x + this.radius >= canvas.width){
+            this.speedX *= -1;
+        }
+
+        if(this.y - this.radius <= 0 || this.y + this.radius >= canvas.height){
+            this.speedY *= -1;
+        }
+    }
+}
+
+const initParticles = () => {
+    const edgeSize = 20;
+
+    const length = PARTICLES_ARRAY.length;
+    for(let i = 0; i < length; i++){
+        PARTICLES_ARRAY.pop();
+    }
+
+    console.log(PARTICLES_ARRAY);
+
+    for(let i = 0; i < NUMBER_OF_PARTICLES; i++){
+        const x = edgeSize + Math.floor((Math.random()*(canvas.width - 2*edgeSize)));
+        const y = edgeSize + Math.floor((Math.random()*(canvas.height - 2*edgeSize)));
+
+        const radius = Math.floor(Math.random()*2 + 2);
+
+        const speedX = Math.floor(Math.random()*4 - 2) || 1;
+        const speedY = Math.floor(Math.random()*4 - 2) || -1;
+
+        const color = "hsl(245, 75%, 52%)";
+
+        PARTICLES_ARRAY.push(new Particle(x, y, radius, speedX, speedY, color));
+
+    }
+}
+initParticles();
+
+const updateParticles = () => {
+    PARTICLES_ARRAY.forEach(particle => {
+        particle.draw();
+        particle.checkCollision();
+        particle.move();
+    })
+}
+
+const clearCanvas = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+const animate = () => {
+    clearCanvas();
+    updateParticles();
+    requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+
+window.addEventListener("resize", () => {
+    initCanvas();
+    initParticles();
+})
