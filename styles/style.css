@@ -346,8 +346,8 @@ body{
 
 @media screen and (max-width: 400px){
     body{
-        padding-left: 1rem;
-        padding-right: 1rem;
+        /* padding-left: 1rem;
+        padding-right: 1rem; */
     }
     .card__content{
         padding-left: 1rem;
