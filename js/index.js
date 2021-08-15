@@ -27,19 +27,13 @@ const initTiltEffect = () => {
 
 const regex = /Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i;
 
-console.log(navigator.userAgent);
-
 if(regex.test(navigator.userAgent) ) {
-    console.log("mobile");
-
     const span = document.createElement("span");
     span.textContent = "this is mobile";
 
     document.querySelector(".attribution").appendChild(span);
     
 }else{
-    console.log("pc");
-
     const span = document.createElement("span");
     span.textContent = "this is pc";
 
@@ -55,8 +49,6 @@ if(regex.test(navigator.userAgent) ) {
 \************************/
 
 const rippleElements = document.querySelectorAll(".ripple-element");
-
-console.log(rippleElements);
 
 const handleRippleAnimationEnd = (e) => {
     e.currentTarget.removeEventListener("animationend", handleRippleAnimationEnd);
@@ -107,44 +99,30 @@ rippleElements.forEach(element => {
     Ripple Effect end
 \************************/
 
-const cardContent = document.querySelector(".card__content");
-
-const canvas = document.createElement("CANVAS");
-canvas.classList.add("canvas");
-
-cardContent.appendChild(canvas);
-
-const ctx = canvas.getContext("2d");
-
-const {clientWidth, clientHeight} = cardContent;
-
-
-const initCanvas = () => {
-    canvas.width = clientWidth;
-    canvas.height = clientHeight;
-}
-initCanvas();
-
-
-const NUMBER_OF_PARTICLES = 10;
-const PARTICLES_ARRAY = [];
-
 class Particle{
-    constructor(x, y, radius, speedX, speedY, color){
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.speedX = speedX;
-        this.speedY = speedY;
+    constructor(ctx, color){
+        this.ctx = ctx;
+        this.canvas = this.ctx.canvas;
+
+        this.edgeSize = 20;
+        
+        this.x = this.edgeSize + Math.floor((Math.random()*(this.canvas.width - 2*this.edgeSize)));
+        this.y = this.edgeSize + Math.floor((Math.random()*(this.canvas.height - 2*this.edgeSize)));
+
+        this.radius = Math.floor(Math.random()*1 + 2);
+
+        this.speedX = (Math.random() - 1) || 1;
+        this.speedY = (Math.random() - 1) || -1;
+
         this.color = color;
     }
 
     draw(){
-        ctx.beginPath();
-        ctx.fillStyle = this.color;
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
-        ctx.fill();
-        ctx.closePath();
+        this.ctx.beginPath();
+        this.ctx.fillStyle = this.color;
+        this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
+        this.ctx.fill();
+        this.ctx.closePath();
     }
 
     move(){
@@ -154,62 +132,127 @@ class Particle{
     }
 
     checkCollision(){
-        if(this.x - this.radius <= 0 || this.x + this.radius >= canvas.width){
+        if(this.x - this.radius <= 0 || this.x + this.radius >= this.canvas.width){
             this.speedX *= -1;
         }
 
-        if(this.y - this.radius <= 0 || this.y + this.radius >= canvas.height){
+        if(this.y - this.radius <= 0 || this.y + this.radius >= this.canvas.height){
             this.speedY *= -1;
         }
     }
 }
 
-const initParticles = () => {
-    const edgeSize = 20;
+const resizeCanvas = (canvas, container) => {
+    const {clientWidth, clientHeight} = container;
+    
+    canvas.width = clientWidth;
+    canvas.height = clientHeight;
+}
 
+
+const initParticles = (PARTICLES_ARRAY, NUMBER_OF_PARTICLES, ctx, COLOR) => {
     const length = PARTICLES_ARRAY.length;
+
     for(let i = 0; i < length; i++){
         PARTICLES_ARRAY.pop();
     }
 
-
     for(let i = 0; i < NUMBER_OF_PARTICLES; i++){
-        const x = edgeSize + Math.floor((Math.random()*(canvas.width - 2*edgeSize)));
-        const y = edgeSize + Math.floor((Math.random()*(canvas.height - 2*edgeSize)));
-
-        const radius = Math.floor(Math.random()*2 + 2);
-
-        const speedX = Math.floor(Math.random()*4 - 2) || 1;
-        const speedY = Math.floor(Math.random()*4 - 2) || -1;
-
-        const color = "hsl(245, 75%, 52%)";
-
-        PARTICLES_ARRAY.push(new Particle(x, y, radius, speedX, speedY, color));
-
+        PARTICLES_ARRAY.push(new Particle(ctx, COLOR));
     }
-}
-initParticles();
 
-const updateParticles = () => {
-    PARTICLES_ARRAY.forEach(particle => {
-        particle.draw();
-        particle.checkCollision();
-        particle.move();
-    })
 }
 
-const clearCanvas = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
 
-const animate = () => {
-    clearCanvas();
-    updateParticles();
+const createCanvas = (container) => {
+    const canvas = document.createElement("CANVAS");
+    canvas.classList.add("canvas");
+
+    container.appendChild(canvas);
+
+    const ctx = canvas.getContext("2d");
+
+    resizeCanvas(canvas, container);
+
+    /* Particles creation start */
+    const PARTICLES_ARRAY = [];
+    let NUMBER_OF_PARTICLES = 5;
+    let COLOR = "yellow";
+
+    if(container.classList.contains("card__plan")){
+        NUMBER_OF_PARTICLES = 2;
+    }
+    if(container.classList.contains("card__img-container")){
+        NUMBER_OF_PARTICLES = 3;
+    }
+    if(container.classList.contains("card__btn")){
+        NUMBER_OF_PARTICLES = 2;
+    }
+
+    if(container.classList.contains("card__content")){
+        COLOR = "hsl(245, 75%, 52%)";
+    }
+
+
+    initParticles(PARTICLES_ARRAY, NUMBER_OF_PARTICLES, ctx, COLOR);
+    /* Particles creation end */
+
+    console.log(PARTICLES_ARRAY);
+
+
+    /* Animations start */
+    const updateParticles = () => {
+        PARTICLES_ARRAY.forEach(particle => {
+            particle.draw();
+            particle.checkCollision();
+            particle.move();
+        })
+    }
+
+    const clearCanvas = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    const animate = () => {
+        clearCanvas();
+        updateParticles();
+        requestAnimationFrame(animate);
+    }
     requestAnimationFrame(animate);
+    /* Animations end */
+
+
+    return {
+        particlesArray:PARTICLES_ARRAY, 
+        numberOfParticles:NUMBER_OF_PARTICLES,
+        ctx, 
+        color: COLOR,
+        containerElement: container
+    }
+
 }
-requestAnimationFrame(animate);
+
+const canvasContainers = document.querySelectorAll(".canvas-container");
+
+const canvasObjects = [];
+
+canvasContainers.forEach(container => {
+    const canvasObject = createCanvas(container);
+    canvasObjects.push(canvasObject);
+})
+
 
 window.addEventListener("resize", () => {
-    initCanvas();
-    initParticles();
+    canvasObjects.forEach(canvasObject => {
+        
+        initParticles(
+            canvasObject.particlesArray,
+            canvasObject.numberOfParticles,
+            canvasObject.ctx,
+            canvasObject.color    
+        );
+
+        resizeCanvas(canvasObject.ctx.canvas, canvasObject.containerElement);
+
+    })
 })
